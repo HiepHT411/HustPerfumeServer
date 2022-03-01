@@ -21,11 +21,11 @@ public class Perfume {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "perfume_id_seq")
     @SequenceGenerator(name = "perfume_id_seq", sequenceName = "perfume_id_seq", initialValue = 1001, allocationSize = 1)
     private Long id;
-    private String perfumeTitle;
+    private String title;
     private String perfumer;
     private Integer year;
     private String country;
-    private String perfumeGender;
+    private String gender;
     private String fragranceTopNotes;
     private String fragranceMiddleNotes;
     private String fragranceBaseNotes;
@@ -33,7 +33,8 @@ public class Perfume {
     private Integer price;
     private String volume;
     private String type;
-    private Double perfumeRating;
+    private Double rating;
+    //private String filename; 	// image link
 
     //one to many relationship with Review
     @OneToMany
