@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public User findUserById(Long id) {
+		
 		return userRepository.findById(id).get();
 	}
 
@@ -37,11 +38,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<User> findAllUsers() {
+		
 		return userRepository.findAll();
 	}
 
 	@Override
 	public List<Perfume> getUserCart(List<Long> perfumeIds) {
+		
 		return perfumeRepository.findByIdIn(perfumeIds);
 	}
 
@@ -68,6 +71,7 @@ public class UserServiceImpl implements UserService {
 		
 		List<Review> reviews = perfume.getReviews();
 		reviews.add(newReview);
+		
 		//de type double nham muc dich widenning
 		double totalNumberOfReviews = reviews.size();
 		double totalRatingPoint = reviews.stream().mapToDouble(Review::getRating).sum();
