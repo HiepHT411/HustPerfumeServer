@@ -12,6 +12,7 @@ import com.hoanghiep.perfume.repository.ReviewRepository;
 import com.hoanghiep.perfume.repository.UserRepository;
 import com.hoanghiep.perfume.service.UserService;
 
+import graphql.schema.DataFetcher;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -82,6 +83,21 @@ public class UserServiceImpl implements UserService {
 		perfumeRepository.save(perfume);
 		
 		return perfume;
+	}
+
+	@Override
+	public DataFetcher<User> getUserByQuery() {
+		// TODO Auto-generated method stub
+		return dataFetchingEnvironment -> {
+				Long id = Long.parseLong(dataFetchingEnvironment.getArgument("id"));
+				return userRepository.findById(id).get();
+		};
+	}
+
+	@Override
+	public DataFetcher<List<User>> getAllUsersByQuery() {
+		// TODO Auto-generated method stub
+		return dataFetchingEnvironment -> userRepository.findAllByOrderByIdAsc();
 	}
 
 	
