@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hoanghiep.perfume.dto.SearchWithFilterRequest;
 import com.hoanghiep.perfume.entity.Perfume;
 
 //@CrossOrigin("*")
@@ -39,16 +40,19 @@ public class PerfumeController {
 	//Tao 1 class SearchRequest cho Perfume, tao 1 PerfumeResponse (option)
 	@PostMapping("/search")
 	public ResponseEntity<List<Perfume>> getPerfumesWithFilter(@RequestBody SearchWithFilterRequest filter){
+		return null;
 		
 	}
 	
 	@PostMapping("/search/gender")
-	public ResponseEntity<List<Perfume>> getPerfumesByGender(){
+	public ResponseEntity<List<Perfume>> getPerfumesByGender(@RequestBody SearchWithFilterRequest filter){
+		return null;
 		
 	}
 	
 	@PostMapping("/search/perfumer")
-	public ResponseEntity<List<Perfume>> getPerfumesByPerfumer(){
+	public ResponseEntity<List<Perfume>> getPerfumesByPerfumer(@RequestBody SearchWithFilterRequest filter){
+		return null;
 		
 	}
 	
