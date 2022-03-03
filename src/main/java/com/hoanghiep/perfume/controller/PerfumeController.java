@@ -11,48 +11,57 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hoanghiep.perfume.dto.PerfumeResponse;
 import com.hoanghiep.perfume.dto.SearchWithFilterRequest;
 import com.hoanghiep.perfume.entity.Perfume;
+import com.hoanghiep.perfume.mapper.PerfumeMapper;
+
+import lombok.RequiredArgsConstructor;
 
 //@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/hust/perfumes")
+@RequiredArgsConstructor
 public class PerfumeController {
 	
+	private final PerfumeMapper perfumeMapper;
+	
 	@GetMapping
-	public ResponseEntity<List<Perfume>> getAllPerfumes(){
+	public ResponseEntity<List<PerfumeResponse>> getAllPerfumes(){
 		
-		return null;
+		return ResponseEntity.ok(perfumeMapper.getAllPerfumes());
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Perfume> getPerfumeById(@PathVariable("id") Long id){
+	public ResponseEntity<PerfumeResponse> getPerfumeById(@PathVariable("id") Long id){
 		
-		return null;
+		return ResponseEntity.ok(perfumeMapper.getPerfumeById(id));
 	}
 	
 	@PostMapping("/ids")
-	public ResponseEntity<List<Perfume>> getSomePerfumesByIdList(@RequestBody List<String> ids){
+	public ResponseEntity<List<PerfumeResponse>> getSomePerfumesByIdList(@RequestBody List<Long> ids){
 		
-		return null;
+		return ResponseEntity.ok(perfumeMapper.getListOfPerfumeByIds(ids));
 	}
 	
-	//Tao 1 class SearchRequest cho Perfume, tao 1 PerfumeResponse (option)
 	@PostMapping("/search")
-	public ResponseEntity<List<Perfume>> getPerfumesWithFilter(@RequestBody SearchWithFilterRequest filter){
-		return null;
+	public ResponseEntity<List<PerfumeResponse>> searchPerfumesWithFilter(@RequestBody SearchWithFilterRequest filter){
+		
+		return ResponseEntity.ok(perfumeMapper.getPerfumesWithFilter(filter.getPerfumers(), filter.getGenders(), filter.getPrices(), filter.isSortByPrice()));
 		
 	}
 	
 	@PostMapping("/search/gender")
-	public ResponseEntity<List<Perfume>> getPerfumesByGender(@RequestBody SearchWithFilterRequest filter){
-		return null;
+	public ResponseEntity<List<PerfumeResponse>> searchPerfumesByGender(@RequestBody SearchWithFilterRequest filter){
+		
+		return ResponseEntity.ok(perfumeMapper.getPerfumesByGender(filter.getGender()));
 		
 	}
 	
 	@PostMapping("/search/perfumer")
-	public ResponseEntity<List<Perfume>> getPerfumesByPerfumer(@RequestBody SearchWithFilterRequest filter){
-		return null;
+	public ResponseEntity<List<PerfumeResponse>> searchPerfumesByPerfumer(@RequestBody SearchWithFilterRequest filter){
+		
+		return ResponseEntity.ok(perfumeMapper.getPerfumesByPerfumer(filter.getPerfumer()));
 		
 	}
 	

@@ -9,7 +9,7 @@ public class SearchWithFilterRequest {
 	
 	private List<String> perfumers;
 	private List<String> genders;
-	private List<String> prices;
+	private List<Integer> prices;
 	private String perfumer;
 	private String gender;
 	private boolean sortByPrice;
