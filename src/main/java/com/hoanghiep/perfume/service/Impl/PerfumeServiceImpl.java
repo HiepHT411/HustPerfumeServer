@@ -113,13 +113,13 @@ public class PerfumeServiceImpl implements PerfumeService {
 	@Override
 	public List<Perfume> findByPerfumerOrderByPriceDesc(String perfumer) {
 		
-		return perfumeRepository.findByPerfumerByOrderByPriceDesc(perfumer);
+		return perfumeRepository.findByPerfumerOrderByPriceDesc(perfumer);
 	}
 
 	@Override
 	public List<Perfume> findByGenderOrderByPriceDesc(String gender) {
 		
-		return perfumeRepository.findByGenderByOrderByPriceDesc(gender);
+		return perfumeRepository.findByGenderOrderByPriceDesc(gender);
 	}
 
 	@Override

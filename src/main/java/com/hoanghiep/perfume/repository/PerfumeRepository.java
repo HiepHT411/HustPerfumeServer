@@ -20,9 +20,9 @@ public interface PerfumeRepository extends JpaRepository<Perfume, Long> {
 	
 	List<Perfume> findByPriceBetween(Integer startPrice, Integer endPrice);
 	
-	List<Perfume> findByPerfumerByOrderByPriceDesc(String perfumer);
+	List<Perfume> findByPerfumerOrderByPriceDesc(String perfumer);
 	
-	List<Perfume> findByGenderByOrderByPriceDesc(String gender);
+	List<Perfume> findByGenderOrderByPriceDesc(String gender);
 	
 	
 	
