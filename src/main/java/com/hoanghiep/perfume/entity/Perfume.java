@@ -34,7 +34,7 @@ public class Perfume {
     private String volume;
     private String type;
     private Double rating;
-    //private String filename; 	// image link
+    private String filename; 	// image link
 
     //one to many relationship with Review
     @OneToMany
