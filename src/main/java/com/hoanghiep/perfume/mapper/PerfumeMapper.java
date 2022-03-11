@@ -32,11 +32,11 @@ public class PerfumeMapper {
 		return modelMapper.map(request, Perfume.class);
 	}
 	
-	private PerfumeResponse convertEntityToResponse(Perfume perfume) {
+	PerfumeResponse convertEntityToResponse(Perfume perfume) {
 		return modelMapper.map(perfume, PerfumeResponse.class);
 	}
 	
-	private List<PerfumeResponse> convertListOfEntityToResponse(List<Perfume> perfumes){
+	List<PerfumeResponse> convertListOfEntityToResponse(List<Perfume> perfumes){
 		return perfumes.stream().map(this::convertEntityToResponse).collect(Collectors.toList());
 	}
 	
