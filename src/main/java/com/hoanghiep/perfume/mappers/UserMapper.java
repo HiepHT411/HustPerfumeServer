@@ -1,4 +1,4 @@
-package com.hoanghiep.perfume.mapper;
+package com.hoanghiep.perfume.mappers;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,11 +60,11 @@ public class UserMapper {
 	}
 	
 	
-	User convertRegistrationToEntity(RegistrationRequest request) {
+	public User convertRegistrationToEntity(RegistrationRequest request) {
 		return modelMapper.map(request, User.class);
 	}
 	
-	Review convertReviewRequestToEntity(ReviewRequest request) {
+	public Review convertReviewRequestToEntity(ReviewRequest request) {
 		return modelMapper.map(request, Review.class);
 	}
 	

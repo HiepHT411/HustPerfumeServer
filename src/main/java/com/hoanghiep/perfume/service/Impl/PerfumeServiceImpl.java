@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hoanghiep.perfume.entity.Perfume;
-import com.hoanghiep.perfume.repository.PerfumeRepository;
-import com.hoanghiep.perfume.repository.ReviewRepository;
+import com.hoanghiep.perfume.repositories.PerfumeRepository;
+import com.hoanghiep.perfume.repositories.ReviewRepository;
 import com.hoanghiep.perfume.service.PerfumeService;
 
 import graphql.schema.DataFetcher;

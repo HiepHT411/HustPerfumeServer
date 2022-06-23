@@ -1,4 +1,4 @@
-package com.hoanghiep.perfume.controller;
+package com.hoanghiep.perfume.controllers;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hoanghiep.perfume.dto.PerfumeResponse;
 import com.hoanghiep.perfume.dto.SearchWithFilterRequest;
 import com.hoanghiep.perfume.entity.Perfume;
-import com.hoanghiep.perfume.mapper.PerfumeMapper;
+import com.hoanghiep.perfume.mappers.PerfumeMapper;
 
 import lombok.RequiredArgsConstructor;
 

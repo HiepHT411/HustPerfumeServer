@@ -1,15 +1,16 @@
 package com.hoanghiep.perfume.service.Impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.hoanghiep.perfume.entity.Perfume;
 import com.hoanghiep.perfume.entity.Review;
 import com.hoanghiep.perfume.entity.User;
-import com.hoanghiep.perfume.repository.PerfumeRepository;
-import com.hoanghiep.perfume.repository.ReviewRepository;
-import com.hoanghiep.perfume.repository.UserRepository;
+import com.hoanghiep.perfume.repositories.PerfumeRepository;
+import com.hoanghiep.perfume.repositories.ReviewRepository;
+import com.hoanghiep.perfume.repositories.UserRepository;
 import com.hoanghiep.perfume.service.UserService;
 
 import graphql.schema.DataFetcher;

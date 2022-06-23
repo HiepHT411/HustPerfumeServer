@@ -1,4 +1,4 @@
-package com.hoanghiep.perfume.repository;
+package com.hoanghiep.perfume.repositories;
 
 import java.util.List;
 

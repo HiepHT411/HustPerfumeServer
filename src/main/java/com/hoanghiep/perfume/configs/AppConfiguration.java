@@ -1,10 +1,12 @@
-package com.hoanghiep.perfume.config;
+package com.hoanghiep.perfume.configs;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -21,6 +23,19 @@ public class AppConfiguration {
 
     @Value("${amazon.aws.secret-key}")
     private String awsAccessSecret;
+    
+    @Bean
+    public PasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder(8);
+    }
+    
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STRICT);
+        return mapper;
+    }
     
     @Bean
     public AmazonS3 s3Client() {

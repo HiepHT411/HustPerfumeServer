@@ -4,10 +4,13 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import lombok.Data;
+
+@Data
 public class RegistrationRequest {
 	
-	@NotBlank(message = "Fill captcha.")
-    private String captcha;
+//	@NotBlank(message = "Fill captcha.")
+//    private String captcha;
 
     @NotBlank(message = "FirstName cannot be empty")
     private String firstName;

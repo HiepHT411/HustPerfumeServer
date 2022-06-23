@@ -1,4 +1,4 @@
-package com.hoanghiep.perfume.mapper;
+package com.hoanghiep.perfume.mappers;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,7 +69,7 @@ public class PerfumeMapper {
 		return convertEntityToResponse(perfumeService.savePerfume(convertRequestToEntity(perfume), file));
 	}
 	
-	List<PerfumeResponse> deletePerfume(Long id){
+	public List<PerfumeResponse> deletePerfume(Long id){
 		return convertListOfEntityToResponse(perfumeService.deletePerfume(id));
 	}
 }
