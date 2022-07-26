@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.hoanghiep.perfume.dto.PerfumeResponse;
 import com.hoanghiep.perfume.dto.RegistrationRequest;
 import com.hoanghiep.perfume.dto.ReviewRequest;
+import com.hoanghiep.perfume.dto.ReviewResponse;
 import com.hoanghiep.perfume.dto.UserRequest;
 import com.hoanghiep.perfume.dto.UserResponse;
 import com.hoanghiep.perfume.entity.Review;
@@ -68,7 +69,10 @@ public class UserMapper {
 		return modelMapper.map(request, Review.class);
 	}
 	
-	public PerfumeResponse addReviewToPerfume(ReviewRequest request, Long perfumeId) {
-		return perfumeMapper.convertEntityToResponse(userService.addReviewToPerfume(convertReviewRequestToEntity(request), perfumeId));
+	public ReviewResponse addReviewToPerfume(ReviewRequest request, Long perfumeId) {
+		Review review = modelMapper.map(request, Review.class);
+		
+		ReviewResponse res = modelMapper.map(userService.addReviewToPerfume(review, perfumeId), ReviewResponse.class);
+		return res;
 	}
 }

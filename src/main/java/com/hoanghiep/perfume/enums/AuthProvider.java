@@ -1,4 +1,4 @@
-package com.hoanghiep.perfume.entity;
+package com.hoanghiep.perfume.enums;
 
 public enum AuthProvider {
 	LOCAL,

@@ -9,9 +9,9 @@ import org.springframework.mail.MailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.hoanghiep.perfume.entity.AuthProvider;
-import com.hoanghiep.perfume.entity.Role;
 import com.hoanghiep.perfume.entity.User;
+import com.hoanghiep.perfume.enums.AuthProvider;
+import com.hoanghiep.perfume.enums.Role;
 import com.hoanghiep.perfume.repositories.UserRepository;
 import com.hoanghiep.perfume.security.JwtFactory;
 import com.hoanghiep.perfume.service.AuthenticationService;

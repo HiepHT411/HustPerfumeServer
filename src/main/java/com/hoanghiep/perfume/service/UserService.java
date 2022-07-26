@@ -20,7 +20,7 @@ public interface UserService {
 	
 	User updateProfile(String email, User user);
 	
-	Perfume addReviewToPerfume(Review review, Long perfumeId);
+	Review addReviewToPerfume(Review review, Long perfumeId);
 
 	DataFetcher<User> getUserByQuery();
 	

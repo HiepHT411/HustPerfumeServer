@@ -10,10 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer.JwtConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import com.hoanghiep.perfume.security.JwtFilter;
-
 import lombok.RequiredArgsConstructor;
+import com.hoanghiep.perfume.security.JwtFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -41,7 +39,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
                 "/api/hust/users/review",
                 "/img/**",
                 "/static/**").permitAll()
-        .antMatchers("/**","/auth/**", "/oauth2/**","/swagger-ui.html","/actuator/**","/**/*swagger*/**", "**/v3/api-docs/**").permitAll()
+        .antMatchers("/**","/oauth2/**","/swagger-ui.html","/actuator/**","/**/*swagger*/**", "**/v3/api-docs/**").permitAll()
         .anyRequest().authenticated();
         
 		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

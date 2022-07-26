@@ -1,15 +1,27 @@
 package com.hoanghiep.perfume.service.Impl;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.hoanghiep.perfume.entity.Perfume;
+import com.hoanghiep.perfume.entity.Review;
+import com.hoanghiep.perfume.enums.SearchType;
+import com.hoanghiep.perfume.repositories.PerfumeProjection;
 import com.hoanghiep.perfume.repositories.PerfumeRepository;
 import com.hoanghiep.perfume.repositories.ReviewRepository;
 import com.hoanghiep.perfume.service.PerfumeService;
@@ -25,6 +37,11 @@ public class PerfumeServiceImpl implements PerfumeService {
 	
 	private final ReviewRepository reviewRepository;
 	
+	private final AmazonS3 amazonS3client;
+
+    @Value("${amazon.s3.bucket.name}")
+    private String bucketName;
+    
 	@Override
 	public Perfume findPerfumeById(Long id) {
 
@@ -123,8 +140,23 @@ public class PerfumeServiceImpl implements PerfumeService {
 	}
 
 	@Override
+	@Transactional
 	public Perfume savePerfume(Perfume perfume, MultipartFile multipartFile) {
-		
+		if(multipartFile == null) {	
+			perfume.setFilename("file is null");
+		} else {
+			File file = new File(multipartFile.getOriginalFilename());
+			try (FileOutputStream os = new FileOutputStream(file)){
+				os.write(multipartFile.getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			String fileName = UUID.randomUUID().toString()+"."+multipartFile.getOriginalFilename();
+			amazonS3client.putObject(new PutObjectRequest(bucketName, fileName, file));
+            perfume.setFilename(amazonS3client.getUrl(bucketName, fileName).toString());
+            file.delete();
+		}
 		
 		return perfumeRepository.save(perfume);
 	}
@@ -166,6 +198,24 @@ public class PerfumeServiceImpl implements PerfumeService {
 										.collect(Collectors.toList());
 			return perfumeRepository.findByIdIn(ids);
 		};
+	}
+
+	@Override
+	public List<Review> getReviewsByPerfumeId(Long perfumeId) {
+		Perfume perfume = findPerfumeById(perfumeId);
+		
+		return perfume.getReviews();
+	}
+
+	@Override
+	public Page<PerfumeProjection> findByInputText(SearchType searchType, String text, Pageable pageable) {
+		if (searchType.equals(SearchType.BRAND)) {
+            return perfumeRepository.findByPerfumer(text, pageable);
+        } else if (searchType.equals(SearchType.PERFUME_TITLE)) {
+            return perfumeRepository.findByTitle(text, pageable);
+        } else {
+            return perfumeRepository.findByCountry(text, pageable);
+        }
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import com.hoanghiep.perfume.dto.OrderRequest;
 import com.hoanghiep.perfume.dto.OrderResponse;
 import com.hoanghiep.perfume.dto.PerfumeResponse;
 import com.hoanghiep.perfume.dto.ReviewRequest;
+import com.hoanghiep.perfume.dto.ReviewResponse;
 import com.hoanghiep.perfume.dto.UserRequest;
 import com.hoanghiep.perfume.dto.UserResponse;
 import com.hoanghiep.perfume.entity.UserPrincipal;
@@ -36,6 +38,7 @@ public class UserController {
 	
 	private final UserMapper userMapper;
 	private final OrderMapper orderMapper;
+	private final SimpMessagingTemplate messagingTemplate;
 	
 	@GetMapping
 	public ResponseEntity<List<UserResponse>> getAllUsers(){
@@ -48,6 +51,10 @@ public class UserController {
 		return ResponseEntity.ok(userMapper.findUserById(id));
 	}
 	
+	@GetMapping("/info")
+	public ResponseEntity<UserResponse> getUserInfo(@AuthenticationPrincipal UserPrincipal user){
+		return ResponseEntity.ok(userMapper.findUserByEmail(user.getEmail()));
+	}
 	@PostMapping("/email")
 	public ResponseEntity<UserResponse> getUserByEmail(@RequestBody String email){
 		
@@ -83,17 +90,16 @@ public class UserController {
             return ResponseEntity.ok(orderMapper.postOrder(order));
         }
     }
-    
-    // web socket
-//    @PostMapping("/review")
-//    public ResponseEntity<PerfumeResponse> addReviewToPerfume(@Valid @RequestBody ReviewRequest review,
-//                                                              BindingResult bindingResult) {
-//        if (bindingResult.hasErrors()) {
-//            throw new InputFieldException(bindingResult);
-//        } else {
-//            PerfumeResponse perfume = userMapper.addReviewToPerfume(review, review.getPerfumeId());
-//            messagingTemplate.convertAndSend("/topic/reviews/" + perfume.getId(), perfume);
-//            return ResponseEntity.ok(perfume);
-//        }
-//    }
+    //web socket
+    @PostMapping("/review")
+    public ResponseEntity<ReviewResponse> addReviewToPerfume(@Valid @RequestBody ReviewRequest reviewRequest,
+                                                              BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new InputFieldException(bindingResult);
+        } else {
+            ReviewResponse reviewResponse = userMapper.addReviewToPerfume(reviewRequest, reviewRequest.getPerfumeId());
+            messagingTemplate.convertAndSend("/topic/reviews/" + reviewRequest.getPerfumeId(), reviewResponse);
+            return ResponseEntity.ok(reviewResponse);
+        }
+    }
 }

@@ -4,7 +4,7 @@ import java.util.Set;
 
 import javax.validation.constraints.NotBlank;
 
-import com.hoanghiep.perfume.entity.Role;
+import com.hoanghiep.perfume.enums.Role;
 
 import lombok.Data;
 

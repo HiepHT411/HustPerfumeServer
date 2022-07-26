@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hoanghiep.perfume.entity.Perfume;
 import com.hoanghiep.perfume.entity.Review;
@@ -67,7 +68,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Perfume addReviewToPerfume(Review newReview, Long perfumeId) {
+	@Transactional
+	public Review addReviewToPerfume(Review newReview, Long perfumeId) {
 		
 		Perfume perfume = perfumeRepository.getById(perfumeId);
 		
@@ -80,10 +82,10 @@ public class UserServiceImpl implements UserService {
 		
 		perfume.setRating(totalRatingPoint/totalNumberOfReviews);
 		
-		reviewRepository.save(newReview);
+		//reviewRepository.save(newReview);
 		perfumeRepository.save(perfume);
 		
-		return perfume;
+		return reviewRepository.save(newReview);
 	}
 
 	@Override

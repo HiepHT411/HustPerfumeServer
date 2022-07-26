@@ -34,18 +34,19 @@ public class AuthenticationController {
 	private final AuthenticationManager authenticationManager;
 	
 	private final AuthenticationMapper authenticationMapper;
-	
+	//tested
 	@PostMapping("/login")
 	public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request){
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 			return ResponseEntity.ok(authenticationMapper.login(request.getEmail()));
 		} catch (AuthenticationException e) {
+			e.printStackTrace();
 			throw new ApiRequestException("Incorrect password or email", HttpStatus.FORBIDDEN);
 		}
 	}
-	
-	@PostMapping("/signup")
+	//tested
+	@PostMapping("/registration")
 	public ResponseEntity<String> signup(@Valid @RequestBody RegistrationRequest request, BindingResult bindingResult) {
 		if(!request.getPassword().equals(request.getPassword2())) {
 			throw new ApiRequestException("Password confirmation does not match", HttpStatus.BAD_REQUEST);
@@ -58,8 +59,8 @@ public class AuthenticationController {
         }
         return ResponseEntity.ok("User successfully registered.");
 	}
-	
-	@GetMapping("/activate/{code}")
+	//tested
+	@GetMapping("/registration/activate/{code}")
     public ResponseEntity<String> activateEmailCode(@PathVariable String code) {
         if (!authenticationMapper.activateUser(code)) {
             throw new ApiRequestException("Activation code not found.", HttpStatus.NOT_FOUND);

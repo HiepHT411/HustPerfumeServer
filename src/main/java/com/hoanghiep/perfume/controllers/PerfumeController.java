@@ -2,6 +2,8 @@ package com.hoanghiep.perfume.controllers;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hoanghiep.perfume.dto.HeaderResponse;
 import com.hoanghiep.perfume.dto.PerfumeResponse;
+import com.hoanghiep.perfume.dto.ReviewResponse;
+import com.hoanghiep.perfume.dto.SearchTextRequest;
 import com.hoanghiep.perfume.dto.SearchWithFilterRequest;
 import com.hoanghiep.perfume.entity.Perfume;
 import com.hoanghiep.perfume.mappers.PerfumeMapper;
@@ -44,6 +49,11 @@ public class PerfumeController {
 		return ResponseEntity.ok(perfumeMapper.getListOfPerfumeByIds(ids));
 	}
 	
+	@GetMapping("/reviews/{perfumeId}")
+    public ResponseEntity<List<ReviewResponse>> getReviewsByPerfumeId(@PathVariable Long perfumeId) {
+        return ResponseEntity.ok(perfumeMapper.getReviewsByPerfumeId(perfumeId));
+    }
+	
 	@PostMapping("/search")
 	public ResponseEntity<List<PerfumeResponse>> searchPerfumesWithFilter(@RequestBody SearchWithFilterRequest filter){
 		
@@ -65,6 +75,11 @@ public class PerfumeController {
 		
 	}
 	
+	@PostMapping("/search/text")
+	public ResponseEntity<List<PerfumeResponse>> searchPerfumesByText(@RequestBody SearchTextRequest searchType, @PageableDefault(size = 15) Pageable page){
+		HeaderResponse<PerfumeResponse> res =  perfumeMapper.findPerfumesByInputText(searchType.getType(), searchType.getText(), page);
+		return ResponseEntity.ok().headers(res.getHeaders()).body(res.getItems());
+	}
 	//ung dung graphql ...
 	
 	

@@ -2,7 +2,7 @@ package com.hoanghiep.perfume.dto;
 
 import java.util.Set;
 
-import com.hoanghiep.perfume.entity.Role;
+import com.hoanghiep.perfume.enums.Role;
 
 import lombok.Data;
 
