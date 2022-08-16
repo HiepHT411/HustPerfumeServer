@@ -32,14 +32,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
         .authorizeRequests()
         .antMatchers("/api/hust/auth/**",
                 "/api/hust/auth/login",
-                "/api/hust/signup/**",
+                "/api/hust/registration/**",
                 "/api/hust/perfumes/**",
                 "/api/hust/users/cart",
                 "/api/hust/users/order/**",
                 "/api/hust/users/review",
+                "/websocket", "/websocket/**",
                 "/img/**",
                 "/static/**").permitAll()
-        .antMatchers("/**","/oauth2/**","/swagger-ui.html","/actuator/**","/**/*swagger*/**", "**/v3/api-docs/**").permitAll()
+        .antMatchers("/auth/**","/oauth2/**","/swagger-ui.html", "/v3/api-docs/**","/actuator/**","/**/*swagger*/**").permitAll()
         .anyRequest().authenticated();
         
 		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

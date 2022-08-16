@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.node.TextNode;
 import com.hoanghiep.perfume.dto.OrderRequest;
 import com.hoanghiep.perfume.dto.OrderResponse;
 import com.hoanghiep.perfume.dto.PerfumeResponse;
@@ -56,9 +58,9 @@ public class UserController {
 		return ResponseEntity.ok(userMapper.findUserByEmail(user.getEmail()));
 	}
 	@PostMapping("/email")
-	public ResponseEntity<UserResponse> getUserByEmail(@RequestBody String email){
+	public ResponseEntity<UserResponse> getUserByEmail(@RequestBody TextNode email){
 		
-		return ResponseEntity.ok(userMapper.findUserByEmail(email));
+		return ResponseEntity.ok(userMapper.findUserByEmail(email.asText()));
 	}
 	
 	@PutMapping("/edit")
@@ -82,7 +84,7 @@ public class UserController {
         return ResponseEntity.ok(orderMapper.findOrderByEmail(user.getEmail()));
     }
     
-    @PostMapping("/order")
+    @PostMapping(value = "/order",  produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<OrderResponse> postOrder(@Valid @RequestBody OrderRequest order, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InputFieldException(bindingResult);

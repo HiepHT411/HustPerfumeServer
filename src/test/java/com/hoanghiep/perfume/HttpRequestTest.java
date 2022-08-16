@@ -21,17 +21,17 @@ import org.springframework.test.web.servlet.MockMvc;
 public class HttpRequestTest {
 	
 	//  test that assert the behavior of your application
-	@LocalServerPort
-	private int port;
-
-	@Autowired
-	private TestRestTemplate restTemplate;
-
-	@Test
-	public void greetingShouldReturnDefaultMessage() throws Exception {
-		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/",
-				String.class)).contains("Hello, World");
-	}
+//	@LocalServerPort
+//	private int port;
+//
+//	@Autowired
+//	private TestRestTemplate restTemplate;
+//
+//	@Test
+//	public void greetingShouldReturnDefaultMessage() throws Exception {
+//		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/",
+//				String.class)).contains("Hello, World");
+//	}
 
 	/*not start the server at all but to test only the layer below that, 
 	where Spring handles the incoming HTTP request and hands it off to your controller. 
@@ -41,13 +41,13 @@ public class HttpRequestTest {
 	 by using the @AutoConfigureMockMvc annotation on the test case. The following listing
 	 */
 	
-	@Autowired
-	private MockMvc mockMvc;
-
-	@Test
-	public void shouldReturnDefaultMessage() throws Exception {
-		this.mockMvc.perform(get("/")).andDo(print()).andExpect(status().isOk())
-				.andExpect(content().string(containsString("Hello, World")));
-	}
+//	@Autowired
+//	private MockMvc mockMvc;
+//
+//	@Test
+//	public void shouldReturnDefaultMessage() throws Exception {
+//		this.mockMvc.perform(get("/")).andDo(print()).andExpect(status().isOk())
+//				.andExpect(content().string(containsString("Hello, World")));
+//	}
 	//We can narrow the tests to only the web layer by using @WebMvcTest then Spring Boot instantiates only the web layer rather than the whole context
 }

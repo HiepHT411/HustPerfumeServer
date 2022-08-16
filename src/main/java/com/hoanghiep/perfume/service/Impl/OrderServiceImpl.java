@@ -1,6 +1,7 @@
 package com.hoanghiep.perfume.service.Impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import com.hoanghiep.perfume.repositories.OrderItemRepository;
 import com.hoanghiep.perfume.repositories.OrderRepository;
 import com.hoanghiep.perfume.repositories.PerfumeRepository;
 import com.hoanghiep.perfume.service.OrderService;
+import com.hoanghiep.perfume.service.SystemAutoMailSender;
 
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
@@ -27,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
 	private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final PerfumeRepository perfumeRepository;
+    private final SystemAutoMailSender mailSender;
     
 	@Override
 	public List<Order> findAll() {
@@ -66,6 +69,13 @@ public class OrderServiceImpl implements OrderService {
         order.setEmail(validOrder.getEmail());
         order.setPhoneNumber(validOrder.getPhoneNumber());
         orderRepository.save(order);
+        
+        //ok
+        String subject = "Hust Perfume Order #" + order.getId();
+        String template = "order-template";
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("order", order);
+        mailSender.sendMessageHtml(order.getEmail(), subject, template, attributes);
         
 		return order;
 	}
