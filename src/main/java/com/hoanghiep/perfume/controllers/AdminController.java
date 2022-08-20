@@ -67,6 +67,7 @@ public class AdminController {
     }
 
     @GetMapping("/orders")
+    @PreAuthorize(value = "ADMIN")
     public ResponseEntity<List<OrderResponse>> getAllOrders() {
         return ResponseEntity.ok(orderMapper.findAllOrders());
     }

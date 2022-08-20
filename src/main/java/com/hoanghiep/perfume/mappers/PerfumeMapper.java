@@ -48,8 +48,10 @@ public class PerfumeMapper {
 		return perfumes.stream().map(this::convertEntityToResponse).collect(Collectors.toList());
 	}
 	
-	public List<PerfumeResponse> getAllPerfumes(){
-		return convertListOfEntityToResponse(perfumeService.findAllPerfumes());
+	public HeaderResponse<PerfumeResponse> getAllPerfumes(Pageable pageable){
+		Page<Perfume> page = perfumeService.findAllPerfumes(pageable);
+		//return convertListOfEntityToResponse(perfumeService.findAllPerfumes(pageable));
+		return getHeaderResponse(page.getContent(), page.getTotalPages(), page.getTotalElements(), PerfumeResponse.class);
 	}
 	
 	public PerfumeResponse getPerfumeById(Long id) {
@@ -60,9 +62,11 @@ public class PerfumeMapper {
 		return convertListOfEntityToResponse(perfumeService.findPerfumesByIds(ids));
 	}
 	
-	public List<PerfumeResponse> getPerfumesWithFilter(List<String> perfumers, List<String> genders,
-														List<Integer> prices, boolean sortByPrice){
-		return convertListOfEntityToResponse(perfumeService.filter(perfumers, genders, prices, sortByPrice));
+	public HeaderResponse<PerfumeResponse> getPerfumesWithFilter(List<String> perfumers, List<String> genders,
+														List<Integer> prices, boolean sortByPrice, Pageable pageable){
+		Page<Perfume> perfumes = perfumeService.filter(perfumers, genders, prices, sortByPrice, pageable);
+	
+		return getHeaderResponse(perfumes.getContent(), perfumes.getTotalPages(), perfumes.getTotalElements(), PerfumeResponse.class);
 	}
 	
 	public List<PerfumeResponse> getPerfumesByGender(String gender){
@@ -70,7 +74,7 @@ public class PerfumeMapper {
 	}
 	
 	public List<PerfumeResponse> getPerfumesByPerfumer(String perfumer){
-		return convertListOfEntityToResponse(perfumeService.findByGenderOrderByPriceDesc(perfumer));
+		return convertListOfEntityToResponse(perfumeService.findByPerfumerOrderByPriceDesc(perfumer));
 	}
 	
 	

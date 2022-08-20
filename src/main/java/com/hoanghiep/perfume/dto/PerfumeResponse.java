@@ -16,7 +16,7 @@ public class PerfumeResponse {
     private String perfumer;
     private Integer year;
     private String country;
-    private String perfumeGender;
+    private String gender;
     private String fragranceTopNotes;
     private String fragranceMiddleNotes;
     private String fragranceBaseNotes;
@@ -27,5 +27,5 @@ public class PerfumeResponse {
     private Double rating;
     private List<Review> reviews;
     private String filename;
-    private MultipartFile file;
+    //private MultipartFile file;
 }

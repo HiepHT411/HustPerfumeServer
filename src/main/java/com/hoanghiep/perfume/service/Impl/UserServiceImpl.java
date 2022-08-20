@@ -74,6 +74,7 @@ public class UserServiceImpl implements UserService {
 		Perfume perfume = perfumeRepository.getById(perfumeId);
 		
 		List<Review> reviews = perfume.getReviews();
+		//System.err.println(reviews);
 		reviews.add(newReview);
 		
 		//de type double nham muc dich widenning
@@ -81,10 +82,10 @@ public class UserServiceImpl implements UserService {
 		double totalRatingPoint = reviews.stream().mapToDouble(Review::getRating).sum();
 		
 		perfume.setRating(totalRatingPoint/totalNumberOfReviews);
-		
+		//System.err.println(perfume);
 		//reviewRepository.save(newReview);
 		perfumeRepository.save(perfume);
-		
+		newReview.setPerfume(perfume);
 		return reviewRepository.save(newReview);
 	}
 

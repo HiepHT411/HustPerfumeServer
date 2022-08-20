@@ -5,13 +5,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.springframework.mail.MailSender;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hoanghiep.perfume.entity.User;
 import com.hoanghiep.perfume.enums.AuthProvider;
 import com.hoanghiep.perfume.enums.Role;
+import com.hoanghiep.perfume.exception.ApiRequestException;
 import com.hoanghiep.perfume.repositories.UserRepository;
 import com.hoanghiep.perfume.security.JwtFactory;
 import com.hoanghiep.perfume.service.AuthenticationService;
@@ -80,16 +82,15 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 	}
 
 	@Override
-	public User findByPasswordResetCode(String code) {
-		return userRepository.findByPasswordResetCode(code);
-	}
-
-	@Override
+	@Transactional
 	public boolean sendPasswordResetCode(String email) {
 		// TODO Auto-generated method stub
 		 User user = userRepository.findByEmail(email);
-	     if (user == null) return false;
-	     user.setPasswordResetCode(UUID.randomUUID().toString());
+		 
+		 if(user == null) {
+			 return false;
+		 }
+		 user.setPasswordResetCode(UUID.randomUUID().toString());
 	     userRepository.save(user);
 
 	     String subject = "Password reset";
@@ -101,6 +102,12 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 	     return true;
 	}
 
+	
+	@Override
+	public String findUserEmailByPasswordResetCode(String code) {
+		return userRepository.getEmailByPasswordResetCode(code).orElseThrow(()->new ApiRequestException("Email not found.", HttpStatus.NOT_FOUND));
+	}
+	
 	@Override
 	public boolean passwordReset(String email, String password) {
 		User user = userRepository.findByEmail(email);

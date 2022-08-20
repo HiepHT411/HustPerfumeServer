@@ -32,9 +32,10 @@ public class PerfumeController {
 	private final PerfumeMapper perfumeMapper;
 	
 	@GetMapping
-	public ResponseEntity<List<PerfumeResponse>> getAllPerfumes(){
+	public ResponseEntity<List<PerfumeResponse>> getAllPerfumes(@PageableDefault(size = 15) Pageable pageable){
+		HeaderResponse<PerfumeResponse> res = perfumeMapper.getAllPerfumes(pageable);
 		
-		return ResponseEntity.ok(perfumeMapper.getAllPerfumes());
+		return ResponseEntity.ok().headers(res.getHeaders()).body(res.getItems());
 	}
 	
 	@GetMapping("/{id}")
@@ -55,10 +56,11 @@ public class PerfumeController {
     }
 	
 	@PostMapping("/search")
-	public ResponseEntity<List<PerfumeResponse>> searchPerfumesWithFilter(@RequestBody SearchWithFilterRequest filter){
+	public ResponseEntity<List<PerfumeResponse>> searchPerfumesWithFilter(@RequestBody SearchWithFilterRequest filter, @PageableDefault(size = 15) Pageable pageable){
 		
-		return ResponseEntity.ok(perfumeMapper.getPerfumesWithFilter(filter.getPerfumers(), filter.getGenders(), filter.getPrices(), filter.isSortByPrice()));
+		HeaderResponse<PerfumeResponse> res = perfumeMapper.getPerfumesWithFilter(filter.getPerfumers(), filter.getGenders(), filter.getPrices(), filter.isSortByPrice(), pageable);
 		
+		return ResponseEntity.ok().headers(res.getHeaders()).body(res.getItems());
 	}
 	
 	@PostMapping("/search/gender")

@@ -73,7 +73,8 @@ public class UserController {
             return ResponseEntity.ok(userMapper.updateUserProfile(request, user.getEmail()));
         }
     }
-
+	
+	//ok
     @PostMapping("/cart")
     public ResponseEntity<List<PerfumeResponse>> getCart(@RequestBody List<Long> perfumesIds) {
         return ResponseEntity.ok(userMapper.getCartWithListOfProductId(perfumesIds));
@@ -99,8 +100,12 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             throw new InputFieldException(bindingResult);
         } else {
+//        	System.out.println(reviewRequest);
             ReviewResponse reviewResponse = userMapper.addReviewToPerfume(reviewRequest, reviewRequest.getPerfumeId());
             messagingTemplate.convertAndSend("/topic/reviews/" + reviewRequest.getPerfumeId(), reviewResponse);
+            
+//            System.out.println(reviewResponse);
+            
             return ResponseEntity.ok(reviewResponse);
         }
     }

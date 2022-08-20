@@ -17,11 +17,11 @@ public interface PerfumeService {
 	
 	Perfume findPerfumeById(Long id);
 	
-	List<Perfume> findAllPerfumes();
+	Page<Perfume> findAllPerfumes(Pageable pageable);
 	
 	List<Perfume> findPerfumesByIds(List<Long> ids);
 	
-	List<Perfume> filter(List<String> perfumers, List<String> genders, List<Integer> prices, boolean sortByPrice);
+	Page<Perfume> filter(List<String> perfumers, List<String> genders, List<Integer> prices, boolean sortByPrice, Pageable pageable);
 	
 	List<Perfume> findByPerfumerOrderByPriceDesc(String perfumer);
 	

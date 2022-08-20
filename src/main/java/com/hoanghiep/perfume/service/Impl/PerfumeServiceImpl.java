@@ -49,9 +49,9 @@ public class PerfumeServiceImpl implements PerfumeService {
 	}
 
 	@Override
-	public List<Perfume> findAllPerfumes() {
+	public Page<Perfume> findAllPerfumes(Pageable pageable) {
   
-		return perfumeRepository.findAll();
+		return perfumeRepository.findAllByOrderByIdAsc(pageable);
 	}
 
 	@Override
@@ -63,73 +63,66 @@ public class PerfumeServiceImpl implements PerfumeService {
 	
 	//filter voi cac field perfumer, gender va price
 	@Override
-	public List<Perfume> filter(List<String> perfumers, List<String> genders, List<Integer> prices,
-			boolean sortByPrice) {
+	public Page<Perfume> filter(List<String> perfumers, List<String> genders, List<Integer> prices,
+			boolean sortByPrice, Pageable pageable) {
 		
-		List<Perfume> filterList = perfumeRepository.findAll();
-
-		
-		if(!perfumers.isEmpty() || !genders.isEmpty() || !prices.isEmpty()) {
-			if(!perfumers.isEmpty()) {
-				List<Perfume> matchList = new ArrayList<>();
-				
-				for(String perfumer : perfumers) {
-					matchList.addAll(filterList.stream()
-										.filter(perfume -> perfume.getPerfumer().equals(perfumer))
-										.collect(Collectors.toList()));
-				}
-				filterList = matchList;
-			} else {
-                filterList.addAll(perfumeRepository.findByPerfumerIn(perfumers));
-            }
-			
-			if(!genders.isEmpty()) {
-				List<Perfume> matchList = new ArrayList<>();
-				
-				for(String gender : genders) {
-					matchList.addAll(filterList.stream()
-										.filter(perfume -> perfume.getGender().equals(gender))
-										.collect(Collectors.toList()));
-				}
-				filterList = matchList;
-			} else {
-				filterList.addAll(perfumeRepository.findByGenderIn(genders));
-			}
-			
-			
-			//lay cac san pham trong khoang gia
-			if(!prices.isEmpty()) {
-				List<Perfume> matchList = new ArrayList<>();
-				
-				for(Perfume perfume : filterList) {
-					if ((perfume.getPrice() >= prices.get(0))&&(perfume.getPrice() <= prices.get(1))) {
-						matchList.add(perfume);
-					}
-				}
-				filterList = matchList;
-			} 
-//			else {
-//				filterList = perfumeRepository.findByPriceBetween(prices.get(0), prices.get(1));
+//		List<Perfume> filterList = perfumeRepository.findAll();
+//		System.out.println("perfumers: "+ perfumers);
+//		System.out.println("genders: "+ genders);
+//		System.out.println("prices: "+ prices);
+//
+//		
+//		if(!perfumers.isEmpty() || !genders.isEmpty() || !prices.isEmpty()) {
+//			if(!perfumers.isEmpty()) {
+//				List<Perfume> matchList = new ArrayList<>();
+//				
+//				for(String perfumer : perfumers) {
+//					matchList.addAll(filterList.stream()
+//										.filter(perfume -> perfume.getPerfumer().equals(perfumer))
+//										.collect(Collectors.toList()));
+//				}
+//				filterList = matchList;
 //			}
-			
-		}
-		else {
-			filterList = perfumeRepository.findAllByOrderByIdAsc();
-		}
+//			
+//			if(!genders.isEmpty()) {
+//				List<Perfume> matchList = new ArrayList<>();
+//				
+//				for(String gender : genders) {
+//					matchList.addAll(filterList.stream()
+//										.filter(perfume -> perfume.getGender().equals(gender))
+//										.collect(Collectors.toList()));
+//				}
+//				filterList = matchList;
+//			} 			
+//			
+//			//lay cac san pham trong khoang gia
+//			if(!prices.isEmpty()) {
+//				List<Perfume> matchList = new ArrayList<>();
+//				
+//				for(Perfume perfume : filterList) {
+//					if ((perfume.getPrice() >= prices.get(0))&&(perfume.getPrice() <= prices.get(1))) {
+//						matchList.add(perfume);
+//					}
+//				}
+//				filterList = matchList;
+//			} 
+//			
+//		}
+//		
+//		if(sortByPrice) {
+//			filterList.sort(Comparator.comparing(Perfume::getPrice));
+//		}
+//		else {
+//			filterList.sort((p1, p2) -> p2.getPrice().compareTo(p1.getPrice()));
+//		}
+//		
+//		return filterList;
 		
-		if(sortByPrice) {
-			filterList.sort(Comparator.comparing(Perfume::getPrice));
-		}
-		else {
-			filterList.sort((p1, p2) -> p2.getPrice().compareTo(p1.getPrice()));
-		}
-		
-		return filterList;
+		return perfumeRepository.findPerfumesByFilterParams(perfumers, genders, prices.get(0), prices.get(1), sortByPrice, pageable);
 	}
 
 	@Override
-	public List<Perfume> findByPerfumerOrderByPriceDesc(String perfumer) {
-		
+	public List<Perfume> findByPerfumerOrderByPriceDesc(String perfumer) {		
 		return perfumeRepository.findByPerfumerOrderByPriceDesc(perfumer);
 	}
 
@@ -169,7 +162,7 @@ public class PerfumeServiceImpl implements PerfumeService {
 		perfume.getReviews().forEach(review -> reviewRepository.delete(review));
 		perfumeRepository.delete(perfume);
 		
-		return perfumeRepository.findAllByOrderByIdAsc();
+		return perfumeRepository.findAll();
 	}
 
 	//graphQL
@@ -185,7 +178,7 @@ public class PerfumeServiceImpl implements PerfumeService {
 	@Override
 	public DataFetcher<List<Perfume>> getAllPerfumesByQuery() {
 		
-		return dataFetchingEnvironment -> perfumeRepository.findAllByOrderByIdAsc();
+		return dataFetchingEnvironment -> perfumeRepository.findAll();
 	}
 
 	@Override

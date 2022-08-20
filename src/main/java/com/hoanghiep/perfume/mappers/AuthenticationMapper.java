@@ -3,9 +3,11 @@ package com.hoanghiep.perfume.mappers;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
 
 import com.hoanghiep.perfume.dto.AuthenticationResponse;
 import com.hoanghiep.perfume.dto.RegistrationRequest;
+import com.hoanghiep.perfume.exception.InputFieldException;
 import com.hoanghiep.perfume.service.AuthenticationService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,8 +36,22 @@ public class AuthenticationMapper {
         return authService.activateUser(code);
     }
 	
-	public boolean forgotPassword(String email, String password) {
+	public boolean sendPasswordResetCode(String email){
+		return authService.sendPasswordResetCode(email);
+	}
+	public String getEmailByPwResetCode(String code) {
+		return authService.findUserEmailByPasswordResetCode(code);
+	}
+	
+	public boolean resetPassword(String email, String password) {
 		
 		return authService.passwordReset(email, password); 
+	}
+	
+	public boolean editPassword(String email, String password, BindingResult result) {
+		if(result.hasErrors()) {
+			throw new InputFieldException(result);
+		}
+		return authService.passwordReset(email, password);
 	}
 }

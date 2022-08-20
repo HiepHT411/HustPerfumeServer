@@ -7,10 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +21,7 @@ import com.hoanghiep.perfume.dto.AuthenticationRequest;
 import com.hoanghiep.perfume.dto.AuthenticationResponse;
 import com.hoanghiep.perfume.dto.PasswordResetRequest;
 import com.hoanghiep.perfume.dto.RegistrationRequest;
+import com.hoanghiep.perfume.entity.UserPrincipal;
 import com.hoanghiep.perfume.exception.ApiRequestException;
 import com.hoanghiep.perfume.exception.EmailException;
 import com.hoanghiep.perfume.exception.InputFieldException;
@@ -68,10 +71,28 @@ public class AuthenticationController {
             return ResponseEntity.ok("User successfully activated.");
         }
     }
-	@PostMapping("/forgot")
+	
+	//forget password handler
+	@GetMapping("/forgot/{email}")
+	public ResponseEntity<String> forgotPassword(@PathVariable String email){
+		if(authenticationMapper.sendPasswordResetCode(email)) {
+			return ResponseEntity.ok("Reset password code is send to your E-mail");
+		} else {
+			throw new EmailException("Email not found");
+		}
+		
+	}
+
+	@GetMapping("/reset/{code}")
+	public ResponseEntity<String> getEmailByPwResetCode(@PathVariable String code){
+		
+		return ResponseEntity.ok(authenticationMapper.getEmailByPwResetCode(code));
+	}
+	
+	@PostMapping("/reset")
     public ResponseEntity<String> forgotPassword(@RequestBody PasswordResetRequest passwordResetRequest) {
-		if (passwordResetRequest.getPassword().equals(passwordResetRequest.getPassword2())) {
-			boolean success = authenticationMapper.forgotPassword(passwordResetRequest.getEmail(), passwordResetRequest.getPassword());
+		if (passwordResetRequest.getPassword() != null && passwordResetRequest.getPassword().equals(passwordResetRequest.getPassword2())) {
+			boolean success = authenticationMapper.resetPassword(passwordResetRequest.getEmail(), passwordResetRequest.getPassword());
 		
 			if(success) {
 				return ResponseEntity.ok("Password successfully changed!");
@@ -86,7 +107,22 @@ public class AuthenticationController {
 	
 	
 	
-	
+	@PutMapping("/edit/password")
+	public ResponseEntity<String> editPassword(@AuthenticationPrincipal UserPrincipal user,
+											@Valid @RequestBody PasswordResetRequest pwResetRequest,
+											BindingResult result){
+		if (pwResetRequest.getPassword() != null && pwResetRequest.getPassword().equals(pwResetRequest.getPassword2())) {
+			boolean success = authenticationMapper.editPassword(pwResetRequest.getEmail(), pwResetRequest.getPassword(), result);
+		
+			if(success) {
+				return ResponseEntity.ok("Password successfully changed!");
+			} else {
+				throw new ApiRequestException("Email not found", HttpStatus.BAD_REQUEST);
+			}
+		}else {
+			throw new ApiRequestException("Password confirmation does not match", HttpStatus.BAD_REQUEST);
+		}
+	}
 	
 	
 	

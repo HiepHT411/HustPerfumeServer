@@ -4,16 +4,16 @@ import org.springframework.beans.factory.annotation.Value;
 
 public interface PerfumeProjection {
 	Long getId();
-    String getPerfumeTitle();
+    String getTitle();
     String getPerfumer();
     Integer getPrice();
     String getFilename();
-    Double getPerfumeRating();
+    Double getRating();
     
     @Value("#{target.reviews.size()}")
     Integer getReviewsCount();
 
     void setPerfumer(String perfumer);
-    void setPerfumeGender(String perfumeGender);
+    void setGender(String perfumeGender);
     void setPrice(Integer price);
 }

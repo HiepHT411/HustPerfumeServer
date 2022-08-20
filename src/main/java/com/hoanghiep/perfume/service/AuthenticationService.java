@@ -12,7 +12,7 @@ public interface AuthenticationService {
 
     boolean activateUser(String code);
 
-    User findByPasswordResetCode(String code);
+    String findUserEmailByPasswordResetCode(String code);
 
     boolean sendPasswordResetCode(String email);
 

@@ -1,8 +1,10 @@
 package com.hoanghiep.perfume.entity;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,9 +12,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@Data
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 @Entity
 @Table(name = "perfumes")
 public class Perfume {
@@ -37,7 +43,23 @@ public class Perfume {
     private String filename; 	// image link
 
     //one to many relationship with Review
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "perfume")
+    @JsonIgnore
     private List<Review> reviews;
 
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(id);
+//    }
+
+	@Override
+	public String toString() {
+		return "Perfume [id=" + id + ", title=" + title + ", perfumer=" + perfumer + ", year=" + year + ", country="
+				+ country + ", gender=" + gender + ", fragranceTopNotes=" + fragranceTopNotes
+				+ ", fragranceMiddleNotes=" + fragranceMiddleNotes + ", fragranceBaseNotes=" + fragranceBaseNotes
+				+ ", description=" + description + ", price=" + price + ", volume=" + volume + ", type=" + type
+				+ ", rating=" + rating + ", filename=" + filename + "]";
+	}
+    
+    
 }
