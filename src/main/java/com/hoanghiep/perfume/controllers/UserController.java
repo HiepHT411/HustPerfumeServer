@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,27 +44,33 @@ public class UserController {
 	private final SimpMessagingTemplate messagingTemplate;
 	
 	@GetMapping
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<List<UserResponse>> getAllUsers(){
 		return ResponseEntity.ok(userMapper.findAllUsers());
 	}
 	
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<UserResponse> getUserById(@PathVariable("id") Long id){
 		
 		return ResponseEntity.ok(userMapper.findUserById(id));
 	}
 	
 	@GetMapping("/info")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public ResponseEntity<UserResponse> getUserInfo(@AuthenticationPrincipal UserPrincipal user){
 		return ResponseEntity.ok(userMapper.findUserByEmail(user.getEmail()));
 	}
+	
 	@PostMapping("/email")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<UserResponse> getUserByEmail(@RequestBody TextNode email){
 		
 		return ResponseEntity.ok(userMapper.findUserByEmail(email.asText()));
 	}
 	
 	@PutMapping("/edit")
+	@PreAuthorize("hasRole('USER')")
     public ResponseEntity<UserResponse> updateUserInfo(@AuthenticationPrincipal UserPrincipal user,
                                                        @Valid @RequestBody UserRequest request,
                                                        BindingResult bindingResult) {
@@ -75,17 +82,20 @@ public class UserController {
     }
 	
 	//ok
+	@PreAuthorize("hasRole('USER')")
     @PostMapping("/cart")
     public ResponseEntity<List<PerfumeResponse>> getCart(@RequestBody List<Long> perfumesIds) {
         return ResponseEntity.ok(userMapper.getCartWithListOfProductId(perfumesIds));
     }
 
     @GetMapping("/orders")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<OrderResponse>> getUserOrders(@AuthenticationPrincipal UserPrincipal user) {
         return ResponseEntity.ok(orderMapper.findOrderByEmail(user.getEmail()));
     }
     
     @PostMapping(value = "/order",  produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<OrderResponse> postOrder(@Valid @RequestBody OrderRequest order, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InputFieldException(bindingResult);
@@ -95,6 +105,7 @@ public class UserController {
     }
     //web socket
     @PostMapping("/review")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ReviewResponse> addReviewToPerfume(@Valid @RequestBody ReviewRequest reviewRequest,
                                                               BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

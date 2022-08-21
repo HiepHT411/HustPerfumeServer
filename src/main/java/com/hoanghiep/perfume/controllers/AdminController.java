@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@PreAuthorize("hasAuthority('ADMIN')")
+@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @RequestMapping("/api/hust/admin")
 public class AdminController {
 	
@@ -67,7 +67,7 @@ public class AdminController {
     }
 
     @GetMapping("/orders")
-    @PreAuthorize(value = "ADMIN")
+    //@PreAuthorize(value = "ADMIN")
     public ResponseEntity<List<OrderResponse>> getAllOrders() {
         return ResponseEntity.ok(orderMapper.findAllOrders());
     }
@@ -82,11 +82,13 @@ public class AdminController {
         return ResponseEntity.ok(orderMapper.deleteOrderById(orderId));
     }
 
+    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/user/{id}")
     public ResponseEntity<UserResponse> getUser(@PathVariable("id") Long userId) {
         return ResponseEntity.ok(userMapper.findUserById(userId));
     }
 
+    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/user/all")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
         return ResponseEntity.ok(userMapper.findAllUsers());

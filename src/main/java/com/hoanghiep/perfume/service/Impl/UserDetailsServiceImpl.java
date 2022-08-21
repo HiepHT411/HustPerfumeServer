@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service("userDetailsServiceImpl")
 @RequiredArgsConstructor
-public class UserDetailServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
 	private final UserRepository userRepository;
 	
@@ -30,7 +30,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
         if (user.getActivationCode() != null) {
             throw new LockedException("email not activated");
         }
-        return UserPrincipal.create(user);
+        return UserPrincipal.build(user);
         
 		
 	}

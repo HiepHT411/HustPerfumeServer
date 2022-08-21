@@ -15,7 +15,7 @@ import com.hoanghiep.perfume.enums.AuthProvider;
 import com.hoanghiep.perfume.enums.Role;
 import com.hoanghiep.perfume.exception.ApiRequestException;
 import com.hoanghiep.perfume.repositories.UserRepository;
-import com.hoanghiep.perfume.security.JwtFactory;
+import com.hoanghiep.perfume.security.JwtUtils;
 import com.hoanghiep.perfume.service.AuthenticationService;
 import com.hoanghiep.perfume.service.SystemAutoMailSender;
 
@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService{
 
-	private final JwtFactory jwtFactory;
+	private final JwtUtils jwtFactory;
 	
 	private final UserRepository userRepository;
 	
@@ -55,7 +55,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 		User userFromDb = userRepository.findByEmail(user.getEmail());
         if (userFromDb != null) return false;
         user.setActive(false);
-        user.setRoles(Collections.singleton(Role.USER));
+        user.setRoles(Collections.singleton(Role.ROLE_USER));
         user.setProvider(AuthProvider.LOCAL);
         user.setActivationCode(UUID.randomUUID().toString());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
